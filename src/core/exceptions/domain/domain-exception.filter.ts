@@ -60,7 +60,9 @@ export class DomainHttpExceptionFilter implements ExceptionFilter {
     const nodeEnv = process.env.NODE_ENV;
     // const nodeEnv = this.configService.env;
 
-    if (nodeEnv === 'production') {
+    const isProduction = nodeEnv === 'production';
+
+    if (isProduction) {
       return {
         errorsMessages: exception.extensions,
       };

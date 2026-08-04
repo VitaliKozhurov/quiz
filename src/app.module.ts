@@ -10,6 +10,10 @@ import { DomainHttpExceptionFilter } from './core/exceptions';
       provide: APP_FILTER,
       useClass: DomainHttpExceptionFilter,
     },
+    {
+      provide: APP_FILTER,
+      useClass: DomainHttpExceptionFilter,
+    }, // Порядок важен, сначала обрабатываются доменные ошибки
   ],
 })
 export class AppModule {}
