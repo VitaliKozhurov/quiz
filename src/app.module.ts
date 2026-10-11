@@ -2,7 +2,10 @@ import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { appConfigModule } from './config/app-config.module';
 import { CoreModule } from './core/core.module';
-import { DomainHttpExceptionFilter } from './core/exceptions';
+import {
+  DomainHttpExceptionFilter,
+  GlobalHttpExceptionFilter,
+} from './core/exceptions';
 
 @Module({
   imports: [appConfigModule, CoreModule],
@@ -10,7 +13,7 @@ import { DomainHttpExceptionFilter } from './core/exceptions';
   providers: [
     {
       provide: APP_FILTER,
-      useClass: DomainHttpExceptionFilter,
+      useClass: GlobalHttpExceptionFilter,
     },
     {
       provide: APP_FILTER,
