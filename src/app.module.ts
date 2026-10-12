@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { appConfigModule } from './config/app-config.module';
-import { CoreModule } from './core/core.module';
 import {
   DomainHttpExceptionFilter,
   GlobalHttpExceptionFilter,
 } from './core/exceptions';
+import { CoreModule } from './core';
+import { AppConfigModule } from './config';
 
 @Module({
-  imports: [appConfigModule, CoreModule],
+  imports: [AppConfigModule, CoreModule],
   controllers: [],
   providers: [
     {

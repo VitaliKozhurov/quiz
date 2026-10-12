@@ -1,1 +1,1 @@
-export const core = 'Core module';
+export { CoreModule } from './core.module';
