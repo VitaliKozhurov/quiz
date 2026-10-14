@@ -6,7 +6,6 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { DomainExceptionCode } from '../domain/domain-exception.types';
 
 @Catch()
 export class GlobalHttpExceptionFilter implements ExceptionFilter {
@@ -35,7 +34,7 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
         path: null,
         message: 'Some error occurred',
         extensions: [],
-        code: DomainExceptionCode.INTERNAL_SERVER_ERROR,
+        code: HttpStatus.INTERNAL_SERVER_ERROR,
       };
     }
 
@@ -44,7 +43,7 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
       path: requestUrl,
       message,
       extensions: [],
-      code: DomainExceptionCode.INTERNAL_SERVER_ERROR,
+      code: HttpStatus.INTERNAL_SERVER_ERROR,
     };
   }
 }
