@@ -1,18 +1,31 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication, StandardSchemaValidationPipe } from '@nestjs/common';
 import { BadRequestDomainException } from 'src/core/exceptions';
-import { formatValidationErrors } from 'src/core/validation';
 
 export const setupPipes = (app: INestApplication) => {
   app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      stopAtFirstError: true,
+    new StandardSchemaValidationPipe({
+      //  validateCustomDecorators: true, для валидации декораторов
       exceptionFactory: (errors) => {
-        const extensions = formatValidationErrors(errors);
+        const errorsObject = errors.reduce<Record<string, string>>(
+          (acc, curr) => {
+            const field = curr.path?.map(String).join('/');
+            if (!field || field in acc) {
+              return acc;
+            }
 
-        return new BadRequestDomainException(extensions);
+            acc[field] = curr.message;
+
+            return acc;
+          },
+          {},
+        );
+
+        const result = Object.entries(errorsObject).map(([field, message]) => ({
+          field,
+          message,
+        }));
+
+        return new BadRequestDomainException(result);
       },
     }),
   );

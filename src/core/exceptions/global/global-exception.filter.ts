@@ -6,10 +6,11 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { AppConfigService, NodeEnv } from 'src/config';
 
 @Catch()
 export class GlobalHttpExceptionFilter implements ExceptionFilter {
-  // constructor(private configService: CoreConfig) {}
+  constructor(private configService: AppConfigService) {}
 
   catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -23,10 +24,9 @@ export class GlobalHttpExceptionFilter implements ExceptionFilter {
   }
 
   private buildResponseBody(requestUrl: string, message: string) {
-    const nodeEnv = process.env.NODE_ENV;
-    // const nodeEnv = this.configService.env;
+    const nodeEnv = this.configService.env;
 
-    const isProduction = nodeEnv === 'production';
+    const isProduction = nodeEnv === NodeEnv.PRODUCTION;
 
     if (isProduction) {
       return {

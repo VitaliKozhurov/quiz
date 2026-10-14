@@ -7,10 +7,11 @@ import {
 import { Request, Response } from 'express';
 import { DomainException } from './domain-exception';
 import { DomainExceptionCode } from './domain-exception.types';
+import { AppConfigService, NodeEnv } from 'src/config';
 
 @Catch(DomainException)
 export class DomainHttpExceptionFilter implements ExceptionFilter {
-  // constructor(private configService: CoreConfig) {}
+  constructor(private configService: AppConfigService) {}
 
   catch(exception: DomainException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -57,9 +58,9 @@ export class DomainHttpExceptionFilter implements ExceptionFilter {
     exception: DomainException,
     requestUrl: string,
   ) {
-    const nodeEnv = process.env.NODE_ENV;
+    const nodeEnv = this.configService.env;
 
-    const isProduction = nodeEnv === 'production';
+    const isProduction = nodeEnv === NodeEnv.PRODUCTION;
 
     if (isProduction) {
       return {

@@ -1,4 +1,4 @@
-import { ErrorExtension } from '../../validation/format-validation-errors';
+import { ErrorExtension } from '../error-extension.type';
 import { DomainExceptionCode } from './domain-exception.types';
 
 export class DomainException extends Error {

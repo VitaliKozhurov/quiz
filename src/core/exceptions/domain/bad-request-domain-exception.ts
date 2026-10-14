@@ -1,4 +1,4 @@
-import { ErrorExtension } from 'src/core/validation/format-validation-errors';
+import { ErrorExtension } from '../error-extension.type';
 import { DomainException } from './domain-exception';
 import { DomainExceptionCode } from './domain-exception.types';
 
