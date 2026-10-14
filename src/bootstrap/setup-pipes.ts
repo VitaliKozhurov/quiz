@@ -8,7 +8,12 @@ export const setupPipes = (app: INestApplication) => {
       exceptionFactory: (errors) => {
         const errorsObject = errors.reduce<Record<string, string>>(
           (acc, curr) => {
-            const field = curr.path?.map(String).join('/');
+            const field = curr.path
+              ?.map((segment) =>
+                typeof segment === 'object' ? segment.key : segment,
+              )
+              .join('/');
+
             if (!field || field in acc) {
               return acc;
             }
