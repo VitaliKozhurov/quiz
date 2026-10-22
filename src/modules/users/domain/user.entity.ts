@@ -3,9 +3,9 @@ import { BaseDbEntity } from 'src/core/db';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { ICreateUserDto } from './dto/create-user.dto';
 import {
-  AuthTokenPurpose,
-  UserAuthTokenEntity,
-} from './user-auth-token.entity';
+  AccountTokenPurpose,
+  UserAccountTokenEntity,
+} from './user-account-token.entity';
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseDbEntity {
@@ -25,10 +25,10 @@ export class UserEntity extends BaseDbEntity {
   emailVerifiedAt: Date | null;
 
   // Это поле не создаёт колонку в users. Оно лишь позволяет TypeORM понимать связь и загружать токены пользователя.
-  @OneToMany(() => UserAuthTokenEntity, (token) => token.user, {
+  @OneToMany(() => UserAccountTokenEntity, (token) => token.user, {
     cascade: true,
   })
-  authTokens: UserAuthTokenEntity[];
+  accountTokens: UserAccountTokenEntity[];
 
   static createVerifiedUser(dto: ICreateUserDto): { user: UserEntity } {
     const user = new UserEntity();
@@ -54,16 +54,16 @@ export class UserEntity extends BaseDbEntity {
     user.isEmailVerified = false;
     user.emailVerifiedAt = null;
 
-    const token = new UserAuthTokenEntity();
+    const token = new UserAccountTokenEntity();
     const confirmationCode = randomUUID();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
-    token.purpose = AuthTokenPurpose.EMAIL_VERIFICATION;
+    token.purpose = AccountTokenPurpose.EMAIL_VERIFICATION;
     token.code = confirmationCode;
     token.expiresAt = expiresAt;
     token.user = user;
 
-    user.authTokens = [token];
+    user.accountTokens = [token];
 
     return { user, confirmationCode };
   }
