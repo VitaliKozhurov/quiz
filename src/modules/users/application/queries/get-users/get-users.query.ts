@@ -1,9 +1,9 @@
 import { Query } from '@nestjs/cqrs';
-import { UserEntity } from '../../../domain/user.entity';
-import { UserSortBy } from 'src/modules/users/api/schemas/user-sort-by.enum';
+import { UserSortBy } from '../../../api/schemas/user-sort-by.enum';
 import { SortDirection } from 'src/core/query';
+import { UsersListReadModel } from './get-users.read-model';
 
-type GetUsersParams = {
+export type GetUsersParams = {
   searchLoginTerm?: string;
   searchEmailTerm?: string;
   sortBy: UserSortBy;
@@ -12,7 +12,7 @@ type GetUsersParams = {
   pageSize: number;
 };
 
-export class GetUsersQuery extends Query<UserEntity> {
+export class GetUsersQuery extends Query<UsersListReadModel> {
   constructor(public readonly params: GetUsersParams) {
     super();
   }

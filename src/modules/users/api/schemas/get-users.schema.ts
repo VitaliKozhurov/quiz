@@ -8,4 +8,4 @@ export const getUsersQuerySchema = paginationQuerySchema.extend({
   sortBy: z.enum(UserSortBy).default(UserSortBy.CreatedAt),
 });
 
-export type GetUsersQuery = z.infer<typeof getUsersQuerySchema>;
+export type GetUsersQueryDto = z.infer<typeof getUsersQuerySchema>;
