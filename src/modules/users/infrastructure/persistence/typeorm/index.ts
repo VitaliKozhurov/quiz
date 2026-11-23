@@ -1,1 +1,1 @@
-export { UsersQueryRepository } from './users-query.repository';
+export { TypeOrmUsersQueryRepository } from './users-query.repository';

@@ -1,6 +1,6 @@
 import { paginationQuerySchema } from 'src/core/query';
 import z from 'zod';
-import { UserSortBy } from './user-sort-by.enum';
+import { UserSortBy } from '../../application/queries/get-users/get-users.query';
 
 export const getUsersQuerySchema = paginationQuerySchema.extend({
   searchLoginTerm: z.string().optional(),

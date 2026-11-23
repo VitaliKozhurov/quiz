@@ -4,9 +4,16 @@ import { UserEntity } from '../../../domain/user.entity';
 import {
   GetUsersParams,
   UsersListReadModel,
+  UsersQueryRepository,
 } from '../../../application/queries/get-users';
+import {
+  createPaginatedResult,
+  toTypeOrmPaginationOptions,
+} from 'src/core/query';
+import { Injectable } from '@nestjs/common';
 
-export class UsersQueryRepository {
+@Injectable()
+export class TypeOrmUsersQueryRepository implements UsersQueryRepository {
   constructor(
     @InjectRepository(UserEntity) private usersRepo: Repository<UserEntity>,
   ) {}
@@ -28,8 +35,10 @@ export class UsersQueryRepository {
     }
 
     if (searchEmailTerm) {
-      where.push({ login: ILike(`%${searchEmailTerm}%`) });
+      where.push({ email: ILike(`%${searchEmailTerm}%`) });
     }
+
+    const { skip, take } = toTypeOrmPaginationOptions({ pageNumber, pageSize });
 
     const result = await this.usersRepo.findAndCount({
       select: {
@@ -41,25 +50,16 @@ export class UsersQueryRepository {
       where: where.length > 0 ? where : undefined,
       withDeleted: false,
       order: { [sortBy]: sortDirection },
-      skip: (pageNumber - 1) * pageSize,
-      take: pageSize,
+      skip,
+      take,
     });
 
-    return {
-      pagesCount: Math.ceil(result[1] / pageSize),
-      page: pageNumber,
-      pageSize,
-      totalCount: result[1],
+    const paginatedResult = createPaginatedResult({
       items: result[0],
-    };
+      totalCount: result[1],
+      paginatedParams: { pageNumber, pageSize },
+    });
+
+    return paginatedResult;
   }
 }
-
-// export const getPaginationParams = ({ pageNumber, pageSize }: Args) => {
-//   const offset = (pageNumber - 1) * pageSize;
-//
-//   return {
-//     offset,
-//     limit: pageSize,
-//   };
-// };

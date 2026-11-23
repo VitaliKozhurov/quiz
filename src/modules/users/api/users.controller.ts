@@ -3,16 +3,24 @@ import {
   getUsersQuerySchema,
   type GetUsersQueryDto,
 } from './schemas/get-users.schema';
-import { CommandBus } from '@nestjs/cqrs';
+import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { GetUsersQuery } from '../application/queries/get-users';
+import { UserApiMapper } from './mappers/users-api.mapper';
 
 @Controller('sa/users')
 export class UsersController {
-  constructor(private commandBus: CommandBus) {}
+  constructor(
+    private queryBas: QueryBus,
+    private commandBus: CommandBus,
+  ) {}
 
   @Get()
-  findAll(@Query({ schema: getUsersQuerySchema }) query: GetUsersQueryDto) {
-    return this.commandBus.execute(new GetUsersQuery(query));
+  async findAll(
+    @Query({ schema: getUsersQuerySchema }) query: GetUsersQueryDto,
+  ) {
+    const result = await this.queryBas.execute(new GetUsersQuery(query));
+
+    return UserApiMapper.mapToViewList(result);
   }
 
   @Post()

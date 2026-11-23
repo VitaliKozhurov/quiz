@@ -1,3 +1,5 @@
+import { PaginatedResult } from 'src/core/query';
+
 export type UserListItemReadModel = {
   id: string;
   login: string;
@@ -5,10 +7,4 @@ export type UserListItemReadModel = {
   createdAt: Date;
 };
 
-export type UsersListReadModel = {
-  pagesCount: number;
-  page: number;
-  pageSize: number;
-  totalCount: number;
-  items: UserListItemReadModel[];
-};
+export type UsersListReadModel = PaginatedResult<UserListItemReadModel>;

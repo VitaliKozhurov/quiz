@@ -6,9 +6,11 @@ import {
 } from './core/exceptions';
 import { CoreModule } from './core';
 import { AppConfigModule } from './config';
+import { UsersModule } from './modules/users/users.module';
+import { DatabaseModule } from './modules/database/database.module';
 
 @Module({
-  imports: [AppConfigModule, CoreModule],
+  imports: [AppConfigModule, CoreModule, DatabaseModule, UsersModule],
   controllers: [],
   providers: [
     {
