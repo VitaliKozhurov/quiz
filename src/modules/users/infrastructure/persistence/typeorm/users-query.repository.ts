@@ -4,13 +4,13 @@ import { UserEntity } from '../../../domain/user.entity';
 import {
   GetUsersParams,
   UsersListReadModel,
-  UsersQueryRepository,
 } from '../../../application/queries/get-users';
 import {
   createPaginatedResult,
   toTypeOrmPaginationOptions,
 } from 'src/core/query';
 import { Injectable } from '@nestjs/common';
+import { UsersQueryRepository } from '../../../application/ports/users.query-repository';
 
 @Injectable()
 export class TypeOrmUsersQueryRepository implements UsersQueryRepository {

@@ -6,6 +6,7 @@ import {
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { GetUsersQuery } from '../application/queries/get-users';
 import { UserApiMapper } from './mappers/users-api.mapper';
+import { UseBasicAuth } from 'src/modules/auth/decorators';
 
 @Controller('sa/users')
 export class UsersController {
@@ -14,6 +15,7 @@ export class UsersController {
     private commandBus: CommandBus,
   ) {}
 
+  @UseBasicAuth()
   @Get()
   async findAll(
     @Query({ schema: getUsersQuerySchema }) query: GetUsersQueryDto,
