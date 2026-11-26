@@ -7,8 +7,10 @@ import { TypeOrmUsersQueryRepository } from './infrastructure/persistence';
 import { UserAccountTokenEntity } from './domain/user-account-token.entity';
 import { UsersQueryRepository } from './application/ports/users.query-repository';
 import { AuthModule } from '../auth/auth.module';
+import { CreateUserUseCase } from './application/commands/create-user';
 
 const queryHandlers = [GetUsersQueryHandler];
+const commandHandlers = [CreateUserUseCase];
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ const queryHandlers = [GetUsersQueryHandler];
   controllers: [UsersController],
   providers: [
     ...queryHandlers,
+    ...commandHandlers,
     { provide: UsersQueryRepository, useClass: TypeOrmUsersQueryRepository },
   ],
   exports: [],
