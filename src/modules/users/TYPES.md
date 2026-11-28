@@ -85,7 +85,7 @@ HTTP DTO. Он содержит только данные, требуемые д
 
 ```ts
 // application/queries/get-users/get-users.read-model.ts
-export type UserListItemReadModel = {
+export type UserItemReadModel = {
   id: string;
   login: string;
   email: string;
@@ -97,7 +97,7 @@ export type UsersListReadModel = {
   page: number;
   pageSize: number;
   totalCount: number;
-  items: UserListItemReadModel[];
+  items: UserItemReadModel[];
 };
 ```
 
@@ -199,7 +199,7 @@ GetUsersQueryDto
 ## Безопасность контрактов
 
 `passwordHash`, одноразовые коды, токены и иные чувствительные поля не должны
-попадать в `UserListItemReadModel` или `UserResponseDto`. Для логина допустим
+попадать в `UserItemReadModel` или `UserResponseDto`. Для логина допустим
 отдельный внутренний контракт, например `UserCredentialsReadModel`, потому что
 ему действительно нужен `passwordHash` для `PasswordHasher.compare`.
 
@@ -215,5 +215,5 @@ GetUsersQueryDto
 | `GetUsersResponseDto` | `api/dto` | Публичный JSON-ответ endpoint |
 | `GetUsersParams` | `application/queries/get-users` | Вход сценария чтения |
 | `UsersListReadModel` | `application/queries/get-users` | Результат сценария и репозитория |
-| `UserListItemReadModel` | `application/queries/get-users` | Один пользователь в результате списка |
+| `UserItemReadModel` | `application/queries/get-users` | Один пользователь в результате списка |
 | `UsersQueryRepository` | `application/queries/get-users` | Порт чтения пользователей |

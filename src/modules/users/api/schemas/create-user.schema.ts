@@ -16,4 +16,4 @@ export const createUserSchema = z.object({
   email: z.string().regex(EMAIL_REGEX, { error: 'Incorrect login pattern' }),
 });
 
-export type CreateUserDto = z.infer<typeof createUserSchema>;
+export type CreateUserRequestDto = z.infer<typeof createUserSchema>;

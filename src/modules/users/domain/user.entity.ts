@@ -1,18 +1,21 @@
 import { randomUUID } from 'crypto';
 import { BaseDbEntity } from 'src/core/db';
-import { Column, Entity, OneToMany } from 'typeorm';
-import { ICreateUserDto } from './dto/create-user.dto';
+import { Column, Entity, OneToMany, Unique } from 'typeorm';
+import { CreateUserProps } from './dto/create-user.dto';
 import {
   AccountTokenPurpose,
   UserAccountTokenEntity,
 } from './user-account-token.entity';
+import { USER_CONSTRAINTS } from './constraints';
 
 @Entity({ name: 'users' })
+@Unique(USER_CONSTRAINTS.LOGIN, ['login'])
+@Unique(USER_CONSTRAINTS.EMAIL, ['email'])
 export class UserEntity extends BaseDbEntity {
-  @Column({ type: 'varchar', length: 50, unique: true })
+  @Column({ type: 'varchar', length: 50 })
   login: string;
 
-  @Column({ type: 'varchar', length: 254, unique: true })
+  @Column({ type: 'varchar', length: 254 })
   email: string;
 
   @Column({ type: 'text' })
@@ -30,7 +33,7 @@ export class UserEntity extends BaseDbEntity {
   })
   accountTokens: UserAccountTokenEntity[];
 
-  static createVerifiedUser(dto: ICreateUserDto): { user: UserEntity } {
+  static createVerifiedUser(dto: CreateUserProps): { user: UserEntity } {
     const user = new UserEntity();
 
     user.login = dto.login;
@@ -42,7 +45,7 @@ export class UserEntity extends BaseDbEntity {
     return { user };
   }
 
-  static createUnverifiedUser(dto: ICreateUserDto): {
+  static createUnverifiedUser(dto: CreateUserProps): {
     user: UserEntity;
     confirmationCode: string;
   } {

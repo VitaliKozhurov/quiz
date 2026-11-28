@@ -1,8 +1,10 @@
 import { PaginatedResult } from 'src/core/query';
 import {
-  UserListItemReadModel,
+  UserItemReadModel,
   UsersListReadModel,
 } from '../../application/queries/get-users/get-users.read-model';
+import { CreateUserRequestDto } from '../schemas/create-user.schema';
+import { CreateUserCommandInput } from '../../application/commands/create-user/create-user.command';
 
 export type UserView = {
   id: string;
@@ -14,12 +16,22 @@ export type UserView = {
 export type UsersListView = PaginatedResult<UserView>;
 
 export class UserApiMapper {
+  static toCreateUserCommandInput(
+    dto: CreateUserRequestDto,
+  ): CreateUserCommandInput {
+    return {
+      login: dto.login,
+      email: dto.email,
+      password: dto.password,
+    };
+  }
+
   static mapToView({
     id,
     login,
     email,
     createdAt,
-  }: UserListItemReadModel): UserView {
+  }: UserItemReadModel): UserView {
     return { id, login, email, createdAt: createdAt.toISOString() };
   }
 

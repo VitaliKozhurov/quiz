@@ -1,20 +1,20 @@
 import { Command } from '@nestjs/cqrs';
 
-export type CreateUserBody = {
+export type CreateUserCommandInput = {
   login: string;
   email: string;
   password: string;
 };
 
-export type CerateUserResult = {
+export type CreateUserReadModel = {
   id: string;
   login: string;
   email: string;
-  createdAt: string;
+  createdAt: Date;
 };
 
-export class CreateUserCommand extends Command<CerateUserResult> {
-  constructor(public body: CreateUserBody) {
+export class CreateUserCommand extends Command<CreateUserReadModel> {
+  constructor(public input: CreateUserCommandInput) {
     super();
   }
 }

@@ -1,34 +1,26 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { CerateUserResult, CreateUserCommand } from './create-user.command';
-// import { DomainException, DomainExceptionCode } from 'src/core/exceptions';
+import { CreateUserReadModel, CreateUserCommand } from './create-user.command';
+import { UsersRepository } from '../../ports/users.repository';
+import { UserEntity } from '../../../domain/user.entity';
 
 @CommandHandler(CreateUserCommand)
 export class CreateUserUseCase implements ICommandHandler<CreateUserCommand> {
-  constructor(private usersFactory: UsersFactory) {}
+  constructor(private usersRepository: UsersRepository) {}
 
-  async execute({ body }: CreateUserCommand): Promise<CerateUserResult> {
-    try {
-      const newUser = await this.usersFactory.createVerifiedUser(dto);
+  async execute({ input }: CreateUserCommand): Promise<CreateUserReadModel> {
+    const { user } = UserEntity.createVerifiedUser({
+      login: input.login,
+      email: input.email,
+      passwordHash: '',
+    });
 
-      return newUser;
-    } catch (error) {
-      //       if (isUniqueEntityError(error)) {
-      //         const constraint = error.driverError
-      //           .constraint as keyof typeof USER_UNIQUE_CONSTRAINTS;
-      //
-      //         if (!USER_UNIQUE_CONSTRAINTS[constraint]) {
-      //           throw error;
-      //         }
-      //
-      //         throw new DomainException({
-      //           code: DomainExceptionCode.BAD_REQUEST_ERROR,
-      //           message: 'User with provided credentials already exists',
-      //           extensions: [USER_UNIQUE_CONSTRAINTS[constraint]],
-      //         });
-      //       }
-      //
-      //       throw error;
-      //     }
-    }
+    const savedUser = await this.usersRepository.save(user);
+
+    return {
+      id: savedUser.id,
+      login: savedUser.login,
+      email: savedUser.email,
+      createdAt: savedUser.createdAt,
+    };
   }
 }

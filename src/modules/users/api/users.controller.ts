@@ -16,34 +16,36 @@ import { GetUsersQuery } from '../application/queries/get-users';
 import { UserApiMapper } from './mappers/users-api.mapper';
 import { UseBasicAuth } from 'src/modules/auth/decorators';
 import {
-  type CreateUserDto,
+  type CreateUserRequestDto,
   createUserSchema,
 } from './schemas/create-user.schema';
 import { uuidParamSchema } from 'src/core/schemas';
 import { CreateUserCommand } from '../application/commands/create-user';
 
+@UseBasicAuth()
 @Controller('sa/users')
 export class UsersController {
   constructor(
-    private queryBas: QueryBus,
+    private queryBus: QueryBus,
     private commandBus: CommandBus,
   ) {}
 
-  @UseBasicAuth()
   @Get()
   async findAll(
     @Query({ schema: getUsersQuerySchema }) query: GetUsersQueryDto,
   ) {
-    const result = await this.queryBas.execute(new GetUsersQuery(query));
+    const result = await this.queryBus.execute(new GetUsersQuery(query));
 
     return UserApiMapper.mapToViewList(result);
   }
 
   @Post()
-  async create(@Body({ schema: createUserSchema }) body: CreateUserDto) {
-    const result = await this.commandBus.execute(new CreateUserCommand(body));
+  async create(@Body({ schema: createUserSchema }) body: CreateUserRequestDto) {
+    const input = UserApiMapper.toCreateUserCommandInput(body);
 
-    return result;
+    const result = await this.commandBus.execute(new CreateUserCommand(input));
+
+    return UserApiMapper.mapToView(result);
   }
 
   @Delete(':id')

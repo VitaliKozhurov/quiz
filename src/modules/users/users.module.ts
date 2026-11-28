@@ -3,11 +3,15 @@ import { GetUsersQueryHandler } from './application/queries/get-users/get-users.
 import { UsersController } from './api/users.controller';
 import { UserEntity } from './domain/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmUsersQueryRepository } from './infrastructure/persistence';
+import {
+  TypeOrmUsersQueryRepository,
+  TypeOrmUsersRepository,
+} from './infrastructure/persistence';
 import { UserAccountTokenEntity } from './domain/user-account-token.entity';
 import { UsersQueryRepository } from './application/ports/users.query-repository';
 import { AuthModule } from '../auth/auth.module';
 import { CreateUserUseCase } from './application/commands/create-user';
+import { UsersRepository } from './application/ports/users.repository';
 
 const queryHandlers = [GetUsersQueryHandler];
 const commandHandlers = [CreateUserUseCase];
@@ -32,6 +36,7 @@ const commandHandlers = [CreateUserUseCase];
     ...queryHandlers,
     ...commandHandlers,
     { provide: UsersQueryRepository, useClass: TypeOrmUsersQueryRepository },
+    { provide: UsersRepository, useClass: TypeOrmUsersRepository },
   ],
   exports: [],
 })
